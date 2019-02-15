@@ -49,10 +49,10 @@ contract BatteryToken is ERC20 {
     //Functions
     constructor() public {
         owner = msg.sender;
-        timeRef = now;
+        timeRef = block.timestamp;
         _batteryOwner[globalId] = address(0);
         _battery[globalId].publicDomain = false;
-        _battery[globalId].startTime = now;
+        _battery[globalId].startTime = block.timestamp;
         _battery[globalId].initialValue = 0;
     }
 
@@ -70,7 +70,7 @@ contract BatteryToken is ERC20 {
         globalId = globalId.add(1);
         _batteryOwner[globalId] = msg.sender;
         _battery[globalId].publicDomain = _publicDomain;
-        _battery[globalId].startTime = now;
+        _battery[globalId].startTime = block.timestamp;
         _battery[globalId].initialValue = _value; //no puede ser fijo, ver cómo hacer!!!!!!!!!!!!!!!!!!!
         emit MintBat(_batteryOwner[globalId], globalId, _battery[globalId].publicDomain, _battery[globalId].startTime);
         return globalId;
@@ -79,16 +79,25 @@ contract BatteryToken is ERC20 {
     function burnBat(uint256 id) public returns(bool){
         //Si el mint lo hacen las fabricas los puntos de carga se las compran y cuando estas tengan un valor
         //muuy bajo se las vuelven a vender y las fabricas hacen el burn. Si alguien hace burn antes pierde ese dinero
-        require(msg.sender == _batteryOwner[id], 'Only the owner can burn');
+        require(msg.sender == _batteryOwner[id], "Only the owner can burn");
         _batteryOwner[id] = address(0);
         //Devolver valor en ether a su cuenta real en Ethers????
         emit BurnBat(msg.sender, id);
         return true;
     }
 
-    function proposeExchange(uint256 _itemProposer, uint256 _itemExecuter, uint256 proposerChargeLevel, uint256 executerChargeLevel, address _executer) public returns (bytes32) {
-        require((msg.sender == _batteryOwner[_itemProposer] || msg.sender == _battery[_itemProposer].privateCharger), 'Msg.sender must be the owner of the 1st item');
-        bytes32 _exchangeId = bytes32(keccak256(abi.encodePacked(now, _itemProposer, _itemExecuter, msg.sender, _executer)));
+    function proposeExchange(
+        uint256 _itemProposer,
+        uint256 _itemExecuter,
+        uint256 proposerChargeLevel,
+        uint256 executerChargeLevel,
+        address _executer
+    )
+        public
+        returns (bytes32)
+    {
+        require((msg.sender == _batteryOwner[_itemProposer] || msg.sender == _battery[_itemProposer].privateCharger), "Wrong msg.sender");
+        bytes32 _exchangeId = bytes32(keccak256(abi.encodePacked(block.timestamp, _itemProposer, _itemExecuter, msg.sender, _executer)));
         _exchanges[_exchangeId].itemProposer = _itemProposer;
         _exchanges[_exchangeId].proposer = msg.sender;
         _exchanges[_exchangeId].executer = _executer;
@@ -105,17 +114,17 @@ contract BatteryToken is ERC20 {
             //redefinir aqui la funcion approve para que si expira el tiempo pierda lo aprobado
             //o para no jugarsela con esto hacer que el más caro proponga y el mas barato execute
         }
-        _exchanges[_exchangeId].proposedTime = now;
+        _exchanges[_exchangeId].proposedTime = block.timestamp;
         _exchanges[_exchangeId].proposed = true;
         emit Proposal(_exchangeId, msg.sender, _executer, _itemProposer, _itemExecuter);
         return _exchangeId;
     }
 
     function executeExchange(bytes32 _exchangeId) public returns (bool) {
-        require(_exchanges[_exchangeId].proposed, 'This exchange id does not exist');
+        require(_exchanges[_exchangeId].proposed, "This exchange id does not exist");
         //meter un !executed
-        require(msg.sender == _exchanges[_exchangeId].executer, 'msg.sender must be the executer');
-        require(now.sub(_exchanges[_exchangeId].proposedTime) < PROPOSALTIME, 'Proposal time expired');
+        require(msg.sender == _exchanges[_exchangeId].executer, "msg.sender must be the executer");
+        require(block.timestamp.sub(_exchanges[_exchangeId].proposedTime) < PROPOSALTIME, "Proposal time expired");
         if (_exchanges[_exchangeId].valueProposer >= _exchanges[_exchangeId].valueExecuter){
             super.transfer(_exchanges[_exchangeId].proposer, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
         } else {
@@ -140,12 +149,12 @@ contract BatteryToken is ERC20 {
             return 0;
         } else {
             uint256 value = _battery[_itemId].initialValue
-            .sub(now.sub(_battery[_itemId].startTime))
+            .sub(block.timestamp.sub(_battery[_itemId].startTime))
             .add(
               CHARGEPRICE
                 .mul(_itemChargeLevel)
                 .div(100)
-                .mul(_battery[_itemId].initialValue.sub(now.sub(_battery[_itemId].startTime)))
+                .mul(_battery[_itemId].initialValue.sub(block.timestamp.sub(_battery[_itemId].startTime)))
                 .div(_battery[_itemId].initialValue)
             );
             require((value >= 0 || value <= _battery[_itemId].initialValue.add(CHARGEPRICE)), "Bad value");
