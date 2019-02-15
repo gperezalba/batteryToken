@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity >=0.4.21 <0.6.0;
 
 import "./SafeMath.sol";
 import "./ERC20.sol";
@@ -150,7 +150,7 @@ contract BatteryToken is ERC20 {
         if (_itemId == 0) {
             return 0;
         } else {
-            return _battery[_itemId].initialValue
+            uint256 value = _battery[_itemId].initialValue
             .sub(now.sub(_battery[_itemId].startTime))
             .add(
               CHARGEPRICE
@@ -159,6 +159,8 @@ contract BatteryToken is ERC20 {
                 .mul(_battery[_itemId].initialValue.sub(now.sub(_battery[_itemId].startTime)))
                 .div(_battery[_itemId].initialValue)
             );
+            require((value >= 0 || value <= _battery[_itemId].initialValue.add(CHARGEPRICE)), "Bad value");
+            return value;
         }
 
     }
