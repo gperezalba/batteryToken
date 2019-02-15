@@ -21,6 +21,7 @@ truffle:
     - npm install -g ganache-cli
     - npm install chai
     - npm install --save-dev chai-bignumber
+    - npm install truffle-assertions
     - truffle compile
     - ganache-cli > /dev/null &
     - truffle test
