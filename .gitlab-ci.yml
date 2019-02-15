@@ -1,0 +1,48 @@
+stages:
+  - build
+  - coverage
+  - linter
+  - security
+
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - node_modules/
+  - build/
+
+truffle:
+  image: node:8
+  stage: build
+  script:
+    - apt-get update && apt-get install -y gawk
+    - npm install
+    - npm install -g truffle
+    - npm install -g ganache-cli
+    - truffle compile
+    - ganache-cli > /dev/null &
+    - truffle test
+
+coverage:
+  image: node:8
+  stage: coverage
+  script:
+    - apt-get update && apt-get install -y gawk
+    - npm install
+    - npm install -g truffle
+    - npm install -g ganache-cli
+    - npm install --save-dev solidity-coverage
+    - node_modules/.bin/solidity-coverage
+
+solium:
+  image: node:8
+  stage: linter
+  script:
+    - npm install -g solium
+    - solium -d contracts/
+
+mythril:
+  image: sharathkumaranbu/mythril-ci
+  stage: security
+  script:
+    - myth --truffle
