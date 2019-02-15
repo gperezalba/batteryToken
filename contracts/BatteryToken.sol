@@ -46,17 +46,6 @@ contract BatteryToken is ERC20 {
     event Proposal(bytes32 proposalId, address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
     event Execution(address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
 
-    //modifier
-    modifier onlyPublic(uint256 _batId){
-        require(_battery[_batId].publicDomain, 'Required public item');
-        _;
-    }
-
-    modifier onlyPrivate(uint256 _batId){
-        require(!_battery[_batId].publicDomain, 'Required private item');
-        _;
-    }
-
     //Functions
     constructor() public {
         owner = msg.sender;
@@ -112,7 +101,7 @@ contract BatteryToken is ERC20 {
         }
 
         if (_exchanges[_exchangeId].valueProposer <= _exchanges[_exchangeId].valueExecuter){
-            super.approve(_executer, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
+            super.approve(_executer, _exchanges[_exchangeId].valueExecuter.sub(_exchanges[_exchangeId].valueProposer));
             //redefinir aqui la funcion approve para que si expira el tiempo pierda lo aprobado
             //o para no jugarsela con esto hacer que el más caro proponga y el mas barato execute
         }
@@ -130,7 +119,7 @@ contract BatteryToken is ERC20 {
         if (_exchanges[_exchangeId].valueProposer >= _exchanges[_exchangeId].valueExecuter){
             super.transfer(_exchanges[_exchangeId].proposer, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
         } else {
-            super.transferFrom(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
+            super.transferFrom(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].valueExecuter.sub(_exchanges[_exchangeId].valueProposer));
         }
         if (_battery[_exchanges[_exchangeId].itemProposer].publicDomain) {
             _batteryOwner[_exchanges[_exchangeId].itemProposer] = msg.sender;

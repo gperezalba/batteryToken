@@ -67,7 +67,7 @@ contract("BatteryToken", async (accounts) => {
     let response = await instance.getBattery.call(1, { from: account1 });
     expect(response[0]).to.equal(domain) &&
     expect(response[2].toNumber()).to.equal(value);
-  })
+  });
 
   it("should return value of a batteryId", async () => {
     let instance = await BatteryToken.deployed();
@@ -83,6 +83,14 @@ contract("BatteryToken", async (accounts) => {
     let value3 = response3.toNumber();
     expect(value1).to.be.above(value2) &&
     expect(value2).to.be.above(value3);
+  });
+
+  it("should return value 0 of batteryId 0", async () => {
+    let instance = await BatteryToken.deployed();
+    const account1 = accounts[1];
+    let response = await instance.getBatValue.call(0, 0, { from: account1 });
+    let value1 = response.toNumber();
+    expect(value1).to.equal(0);
   })
 
   it("should propose a public exchange", async () => {
@@ -113,6 +121,34 @@ contract("BatteryToken", async (accounts) => {
     });
   });
 
+  it("should propose a public exchange with approve", async () => {
+    let instance = await BatteryToken.deployed();
+    const account1 = accounts[1];
+    const account2 = accounts[2];
+    await instance.mintERC20(1000, { from: account1 });
+    await instance.mintERC20(1000, { from: account2 });
+    var mint1 = await instance.mintBat(true, 120, { from: account1 });
+    var mint2 = await instance.mintBat(true, 300, { from: account2 });
+    let item1 = parseInt(mint1.logs[0].args.id.c);
+    let item2 = parseInt(mint2.logs[0].args.id.c);
+    let response = await instance.proposeExchange(
+      item1,
+      item2,
+      98,
+      7,
+      account2,
+      { from: account1 }
+    );
+    let exchangeId = response.logs[1].args.proposalId;
+    truffleAssert.eventEmitted(response, 'Proposal', (ev) => {
+      return ev.emiter == account1 &&
+        ev.executer == account2 &&
+        ev.itemEmiter == item1 &&
+        ev.proposalId == exchangeId &&
+        ev.itemExecuter == item2;
+    });
+  });
+
   it("should execute a public exchange", async () => {
     let instance = await BatteryToken.deployed();
     const account1 = accounts[1];
@@ -123,6 +159,29 @@ contract("BatteryToken", async (accounts) => {
     let item2 = parseInt(mint2.logs[0].args.id.c);
     let response = await instance.proposeExchange(item1, item2, 98, 7, account2, { from: account1 });
     let exchangeId = response.logs[0].args.proposalId;
+    let response2 = await instance.executeExchange(exchangeId, { from: account2 });
+    truffleAssert.eventEmitted(response2, 'Execution', (ev) => {
+      return ev.emiter == account1 &&
+        ev.executer == account2 &&
+        ev.itemEmiter == item1 &&
+        ev.itemExecuter == item2;
+    });
+    let owner1 = await instance.ownerOf.call(item1, { from: account1 });
+    let owner2 = await instance.ownerOf.call(item2, { from: account1 });
+    expect(owner1).to.equal(account2) &&
+    expect(owner2).to.equal(account1);
+  });
+
+  it("should execute a public exchange with transferFrom", async () => {
+    let instance = await BatteryToken.deployed();
+    const account1 = accounts[1];
+    const account2 = accounts[2];
+    var mint1 = await instance.mintBat(true, 120, { from: account1 });
+    let item1 = parseInt(mint1.logs[0].args.id.c);
+    var mint2 = await instance.mintBat(true, 370, { from: account2 });
+    let item2 = parseInt(mint2.logs[0].args.id.c);
+    let response = await instance.proposeExchange(item1, item2, 98, 7, account2, { from: account1 });
+    let exchangeId = response.logs[1].args.proposalId;
     let response2 = await instance.executeExchange(exchangeId, { from: account2 });
     truffleAssert.eventEmitted(response2, 'Execution', (ev) => {
       return ev.emiter == account1 &&
