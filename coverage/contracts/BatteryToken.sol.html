@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/BatteryToken.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> BatteryToken.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">94.44% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>51/54</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">53.57% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>15/28</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">81.82% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/11</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88.14% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>52/59</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity &gt;=0.4.21 &lt;0.6.0;
+&nbsp;
+import "./SafeMath.sol";
+import "./ERC20.sol";
+&nbsp;
+contract BatteryToken is ERC20 {
+    using SafeMath for uint256;
+&nbsp;
+    //Añadir el cambio de ownership y revisar visibilidad de todo
+&nbsp;
+    //Variables
+    address public owner; //Owner of the contract
+    uint256 public timeRef; //Time reference for the hole contract
+    uint256 public globalId; //Unique identifier for batteries
+    uint256 constant CHARGEPRICE = 7; //Final value depends on the lifeTime of the battery
+    uint256 constant PROPOSALTIME = 10 * 1 minutes; //Max time since proposal until execution
+&nbsp;
+    //struct
+    struct Battery {
+        uint256 initialValue; //Value of the battery the 0 day
+        bool publicDomain; //True si la bateria es publica False privada//cambiar por enum?
+        address privateCharger; //If private the battery can be assigned temporary to a charger
+        uint256 startTime; //0 day of the battery
+    }
+&nbsp;
+    struct Exchange {
+        uint256 itemProposer; //Id of the battery that owns the proposer
+        uint256 itemExecuter; //Id of the battery that owns the executer (if 0 is a Sell)
+        address proposer;
+        address executer;
+        uint256 valueProposer; //Vale of the battery that owns the proposer
+        uint256 valueExecuter; //Value of the battery that owns the executer (if 0 is a Sell)
+        uint256 proposedTime; //Time of proposal
+        bool proposed; //True when the exchange is proposed
+        bool executed; //True when the exchange is executed
+    }
+&nbsp;
+    //mapping
+    mapping(uint256 =&gt; address) _batteryOwner;
+    mapping(uint256 =&gt; Battery) _battery;
+    mapping(bytes32 =&gt; Exchange) _exchanges;
+&nbsp;
+    //event
+    event MintBat(address own, uint256 id, bool domain, uint time);
+    event BurnBat(address own, uint256 id);
+    event Proposal(bytes32 proposalId, address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
+    event Execution(address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
+&nbsp;
+    //modifier
+<span class="fstat-no" title="function not covered" >    modifier onlyPublic(uint256 _batI</span>d){
+<span class="cstat-no" title="statement not covered" >        require(_battery[_batId].publicDomain, 'Required public item')</span>;
+        _;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlyPrivate(uint256 _batI</span>d){
+<span class="cstat-no" title="statement not covered" >        require(!_battery[_batId].publicDomain, 'Required private item')</span>;
+        _;
+    }
+&nbsp;
+    //Functions
+    constructor() public {
+        owner = msg.sender;
+        timeRef = now;
+        _batteryOwner[globalId] = address(0);
+        _battery[globalId].publicDomain = false;
+        _battery[globalId].startTime = now;
+        _battery[globalId].initialValue = 0;
+    }
+&nbsp;
+    //Returns the owner of a battery. If address(0) battery doesn't exist
+    function ownerOf(uint256 id) public view returns (address) {
+        return _batteryOwner[id];
+    }
+&nbsp;
+    function getBattery(uint256 id) public view returns (bool, uint256, uint256, address) {
+        return (_battery[id].publicDomain, _battery[id].startTime, _battery[id].initialValue, _battery[id].privateCharger);
+    }
+&nbsp;
+    function mintBat(bool _publicDomain, uint256 _value) public returns (uint256) {
+        //todos pueden añadir baterias? hacer un require para solo algunas address autorizadas?
+        globalId = globalId.add(1);
+        _batteryOwner[globalId] = msg.sender;
+        _battery[globalId].publicDomain = _publicDomain;
+        _battery[globalId].startTime = now;
+        _battery[globalId].initialValue = _value; //no puede ser fijo, ver cómo hacer!!!!!!!!!!!!!!!!!!!
+        emit MintBat(_batteryOwner[globalId], globalId, _battery[globalId].publicDomain, _battery[globalId].startTime);
+        return globalId;
+    }
+&nbsp;
+    function burnBat(uint256 id) public returns(bool){
+        //Si el mint lo hacen las fabricas los puntos de carga se las compran y cuando estas tengan un valor
+        //muuy bajo se las vuelven a vender y las fabricas hacen el burn. Si alguien hace burn antes pierde ese dinero
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.sender == _batteryOwner[id], 'Only the owner can burn');
+        _batteryOwner[id] = address(0);
+        //Devolver valor en ether a su cuenta real en Ethers????
+        emit BurnBat(msg.sender, id);
+        return true;
+    }
+&nbsp;
+    function proposeExchange(uint256 _itemProposer, uint256 _itemExecuter, uint256 proposerChargeLevel, uint256 executerChargeLevel, address _executer) public returns (bytes32) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require((msg.sender == _batteryOwner[_itemProposer] || msg.sender == _battery[_itemProposer].privateCharger), 'Msg.sender must be the owner of the 1st item');
+        bytes32 _exchangeId = bytes32(keccak256(abi.encodePacked(now, _itemProposer, _itemExecuter, msg.sender, _executer)));
+        _exchanges[_exchangeId].itemProposer = _itemProposer;
+        _exchanges[_exchangeId].proposer = msg.sender;
+        _exchanges[_exchangeId].executer = _executer;
+        if (_battery[_itemProposer].publicDomain) {
+            _exchanges[_exchangeId].itemExecuter = _itemExecuter;
+            _exchanges[_exchangeId].valueProposer = getBatValue(_itemProposer, proposerChargeLevel);
+            _exchanges[_exchangeId].valueExecuter = getBatValue(_itemExecuter, executerChargeLevel);
+        } else {
+            _exchanges[_exchangeId].valueProposer = CHARGEPRICE.mul(proposerChargeLevel).div(100).mul(getBatValue(_itemProposer, 100)).div(_battery[_itemProposer].initialValue);
+        }
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (_exchanges[_exchangeId].valueProposer &lt;= _exchanges[_exchangeId].valueExecuter){
+            super.approve(_executer, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
+            //redefinir aqui la funcion approve para que si expira el tiempo pierda lo aprobado
+            //o para no jugarsela con esto hacer que el más caro proponga y el mas barato execute
+        }
+        _exchanges[_exchangeId].proposedTime = now;
+        _exchanges[_exchangeId].proposed = true;
+        emit Proposal(_exchangeId, msg.sender, _executer, _itemProposer, _itemExecuter);
+        return _exchangeId;
+    }
+&nbsp;
+    function executeExchange(bytes32 _exchangeId) public returns (bool) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_exchanges[_exchangeId].proposed, 'This exchange id does not exist');
+        //meter un !executed
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(msg.sender == _exchanges[_exchangeId].executer, 'msg.sender must be the executer');
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(now.sub(_exchanges[_exchangeId].proposedTime) &lt; PROPOSALTIME, 'Proposal time expired');
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (_exchanges[_exchangeId].valueProposer &gt;= _exchanges[_exchangeId].valueExecuter){
+            super.transfer(_exchanges[_exchangeId].proposer, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
+        } else {
+            super.transferFrom(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].valueProposer.sub(_exchanges[_exchangeId].valueExecuter));
+        }
+        if (_battery[_exchanges[_exchangeId].itemProposer].publicDomain) {
+            _batteryOwner[_exchanges[_exchangeId].itemProposer] = msg.sender;
+            _batteryOwner[_exchanges[_exchangeId].itemExecuter] = _exchanges[_exchangeId].proposer;
+        } else if (msg.sender == _batteryOwner[_exchanges[_exchangeId].itemProposer]) {
+            //retirada
+            _battery[_exchanges[_exchangeId].itemProposer].privateCharger = address(0);
+        } else {
+            //entrega al pto carga
+            _battery[_exchanges[_exchangeId].itemProposer].privateCharger = msg.sender;
+        }
+        _exchanges[_exchangeId].executed = true;
+        emit Execution(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].itemProposer, _exchanges[_exchangeId].itemExecuter);
+    }
+&nbsp;
+    function getBatValue(uint256 _itemId, uint256 _itemChargeLevel) public view returns(uint256){
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (_itemId == 0) {
+<span class="cstat-no" title="statement not covered" >            return 0;</span>
+        } else {
+            uint256 value = _battery[_itemId].initialValue
+            .sub(now.sub(_battery[_itemId].startTime))
+            .add(
+              CHARGEPRICE
+                .mul(_itemChargeLevel)
+                .div(100)
+                .mul(_battery[_itemId].initialValue.sub(now.sub(_battery[_itemId].startTime)))
+                .div(_battery[_itemId].initialValue)
+            );
+            <span class="missing-if-branch" title="else path not taken" >E</span>require((value &gt;= 0 || value &lt;= _battery[_itemId].initialValue.add(CHARGEPRICE)), "Bad value");
+            return value;
+        }
+&nbsp;
+    }
+&nbsp;
+    function mintERC20(uint256 amount) public returns(bool){
+        super._mint(msg.sender, amount);
+        return true;
+    }
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Feb 15 2019 18:11:09 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
