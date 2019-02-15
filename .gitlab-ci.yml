@@ -17,7 +17,7 @@ truffle:
   script:
     - apt-get update && apt-get install -y gawk
     - npm install
-    - npm install -g truffle
+    - npm install -g truffle@4.1.15
     - npm install -g ganache-cli
     - truffle compile
     - ganache-cli > /dev/null &
@@ -29,7 +29,7 @@ coverage:
   script:
     - apt-get update && apt-get install -y gawk
     - npm install
-    - npm install -g truffle
+    - npm install -g truffle@4.1.15
     - npm install -g ganache-cli
     - npm install --save-dev solidity-coverage
     - node_modules/.bin/solidity-coverage
