@@ -38,6 +38,8 @@ contract BatteryToken is ERC20 {
     //mapping
     mapping(uint256 => address) _batteryOwner;
     mapping(uint256 => Battery) _battery;
+    mapping(address => uint256[]) _batteriesByOwner;
+    mapping(uint256 => uint256) _indexOfId; //starting since 1, when using use index-1
     mapping(bytes32 => Exchange) _exchanges;
 
     //event
@@ -54,6 +56,11 @@ contract BatteryToken is ERC20 {
         _battery[globalId].publicDomain = false;
         _battery[globalId].startTime = block.timestamp;
         _battery[globalId].initialValue = 0;
+        _indexOfId[globalId] = _batteriesByOwner[address(0)].push(globalId);
+    }
+
+    function batteriesOfOwner(address _owner) public view returns (uint256[]) {
+        return _batteriesByOwner[_owner];
     }
 
     //Returns the owner of a battery. If address(0) battery doesn't exist
@@ -71,18 +78,31 @@ contract BatteryToken is ERC20 {
         _batteryOwner[globalId] = msg.sender;
         _battery[globalId].publicDomain = _publicDomain;
         _battery[globalId].startTime = block.timestamp;
-        _battery[globalId].initialValue = _value; //no puede ser fijo, ver cómo hacer!!!!!!!!!!!!!!!!!!!
+        _battery[globalId].initialValue = _value;
+        _indexOfId[globalId] = _batteriesByOwner[msg.sender].push(globalId);
         emit MintBat(_batteryOwner[globalId], globalId, _battery[globalId].publicDomain, _battery[globalId].startTime);
         return globalId;
     }
 
-    function burnBat(uint256 id) public returns(bool){
+    function burnBat(uint256 id) public returns (bool) {
         //Si el mint lo hacen las fabricas los puntos de carga se las compran y cuando estas tengan un valor
         //muuy bajo se las vuelven a vender y las fabricas hacen el burn. Si alguien hace burn antes pierde ese dinero
         require(msg.sender == _batteryOwner[id], "Only the owner can burn");
         _batteryOwner[id] = address(0);
+        removeFromArray(id, msg.sender);
         //Devolver valor en ether a su cuenta real en Ethers????
         emit BurnBat(msg.sender, id);
+        return true;
+    }
+
+    function removeFromArray (uint256 _id, address _owner) private returns (bool) {
+        uint256 index = _indexOfId[_id];
+        if (index == 0) return;
+
+        if(_batteriesByOwner[_owner].length > 1) {
+            _batteriesByOwner[_owner][index.sub(1)] = _batteriesByOwner[_owner][_batteriesByOwner[_owner].length.sub(1)];
+        }
+        _batteriesByOwner[_owner].length --;
         return true;
     }
 
@@ -131,8 +151,12 @@ contract BatteryToken is ERC20 {
             super.transferFrom(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].valueExecuter.sub(_exchanges[_exchangeId].valueProposer));
         }
         if (_battery[_exchanges[_exchangeId].itemProposer].publicDomain) {
+            removeFromArray(_exchanges[_exchangeId].itemProposer, _exchanges[_exchangeId].proposer);
+            removeFromArray(_exchanges[_exchangeId].itemExecuter, msg.sender);
             _batteryOwner[_exchanges[_exchangeId].itemProposer] = msg.sender;
             _batteryOwner[_exchanges[_exchangeId].itemExecuter] = _exchanges[_exchangeId].proposer;
+            _indexOfId[_exchanges[_exchangeId].itemProposer] = _batteriesByOwner[msg.sender].push(_exchanges[_exchangeId].itemProposer);
+            _indexOfId[_exchanges[_exchangeId].itemExecuter] = _batteriesByOwner[_exchanges[_exchangeId].proposer].push(_exchanges[_exchangeId].itemExecuter);
         } else if (msg.sender == _batteryOwner[_exchanges[_exchangeId].itemProposer]) {
             //retirada
             _battery[_exchanges[_exchangeId].itemProposer].privateCharger = address(0);
