@@ -69,6 +69,15 @@ contract("BatteryToken", async (accounts) => {
     expect(response[2].toNumber()).to.equal(value);
   });
 
+  it("should return batteries of an account", async () => {
+    let instance = await BatteryToken.deployed();
+    const account1 = accounts[0];
+    await instance.mintBat(false, 0, { from: account1 });
+    let response = await instance.batteriesOfOwner.call(account1, { from: account1 });
+    expect(response[0].c[0].valueOf()).to.equal(1) &&
+    expect(response[1].c[0].valueOf()).to.equal(3);
+  });
+
   it("should return value of a batteryId", async () => {
     let instance = await BatteryToken.deployed();
     const account1 = accounts[1];
