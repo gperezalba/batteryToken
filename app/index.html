@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>The mAh 2 Coin Platform</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Theme CSS -->
+    <link href="css/agency.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" integrity="sha384-0s5Pv64cNZJieYFkXYOTId2HMA2Lfb6q2nAcx2n0RTLUnCAoTTsS0nKEO27XyKcY" crossorigin="anonymous"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
+    <![endif]-->
+
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+    <script src="js/index.js"></script>
+
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">The mAh 2 Coin Platform</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Usuario</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#portfolio">Intercambios</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">Fábrica</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="intro-text">
+                <div class="intro-lead-in">¡Bienvenido a la Tokenización de tus baterías!</div>
+                <div class="intro-heading">Empieza a intercambiar tus baterías</div>
+                <a href="#services" class="page-scroll btn btn-xl">Empezar</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Usuario</h2>
+                    <h3 class="section-subheading text-muted">Todos los detalles de tus baterías.</h3>
+                </div>
+            </div>
+            <div class="row text-center">
+              <select name="Addresses" id="Addresses">
+                  <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
+                  <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
+                  <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
+                  <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
+                  <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
+                  <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
+                  <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
+                  <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
+                  <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
+                  <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+              </select>
+              <br>
+              <div style="padding: 20px">
+                  <h4>Lista de tus baterías:</h4>
+                  <button type="submit" class="btn btn-xl" onclick="batteriesOfOwner()">Lista de baterías</button>
+              </div>
+              <div style="padding: 20px">
+                  <h4>Detalles de tu batería:</h4>
+                  <input type="text" placeholder="Identificador batería *" id="getBatteryId">
+                  <button type="submit" class="btn btn-xl" onclick="getBattery()" style="padding: 9px">Detalles por ID</button>
+              </div>
+              <div style="padding: 20px">
+                  <h4>Valor de tu batería:</h4>
+                  <input type="text" placeholder="Identificador*" id="getBatValueId">
+                  <input type="text" placeholder="Nivel de carga (0-100) *" id="getBatValueLevel">
+                  <button type="submit" class="btn btn-xl" onclick="getBatValue()" style="padding: 9px">Valor</button>
+              </div>
+              <div style="padding: 20px">
+                  <h4>Comprar token:</h4>
+                  <input type="text" placeholder="Cantidad *" id="mintAmount">
+                  <button type="submit" class="btn btn-xl" onclick="mintERC20()" style="padding: 9px">Comprar</button>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Grid Section -->
+    <section id="portfolio" class="bg-light-gray">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Intercambios</h2>
+                    <h3 class="section-subheading text-muted">Proponer y ejecutar intercambios.</h3>
+                </div>
+            </div>
+            <div class="row text-center">
+                <h4>Proponer intercambio:</h4>
+                <h5>De:</h5>
+                <select name="From" id="From">
+                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
+                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
+                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
+                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
+                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
+                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
+                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
+                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
+                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
+                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                </select>
+                <h5>Para:</h5>
+                <select name="To" id="To">
+                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
+                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
+                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
+                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
+                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
+                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
+                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
+                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
+                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
+                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                </select>
+                <h5>Identificador de la batería entregada:</h5>
+                <select class="" id="itemProposer">
+                    <option>Seleccione una batería...</option>
+                </select>
+                <h5>Identificador de la batería recibida:</h5>
+                <select class="" id="itemExecuter">
+                    <option>Seleccione una batería...</option>
+                </select>
+                <h5>Nivel de carga de la batería entregada:</h5>
+                <input type="text" placeholder="Nivel de carga (0-100) *" id="chargeLevel1">
+                <h5>Nivel de carga de la batería recibida:</h5>
+                <input type="text" placeholder="Nivel de carga (0-100) *" id="chargeLevel2">
+                <br>
+                <br>
+                <button type="submit" class="btn btn-xl" onclick="proposeExchange()">Proponer</button>
+                <br>
+                <br>
+                <h4>Ejecutar intercambio:</h4>
+                <h5>Ejecutor:</h5>
+                <select name="To" id="Executer">
+                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
+                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
+                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
+                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
+                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
+                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
+                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
+                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
+                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
+                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                </select>
+                <h5>Identificador del intercambio:</h5>
+                <input type="text" placeholder="ID (bytes32) *" id="exchangeId">
+                <br>
+                <br>
+                <button type="submit" class="btn btn-xl" onclick="executeExchange()">Ejecutar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Fábrica</h2>
+                    <h3 class="section-subheading text-muted">Puesta en circulación y retirada de baterías.</h3>
+                    <select name="Fabric" id="Fabric">
+                        <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
+                        <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
+                        <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
+                        <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
+                        <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
+                        <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
+                        <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
+                        <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
+                        <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
+                        <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row text-center">
+              <div style="padding: 20px">
+                  <h4>Poner en circulación:</h4>
+                  <input type="text" placeholder="Precio inicial *" id="initValue">
+                  <br>
+                  <select class="" id="publicDomain">
+                      <option value="true">Pública</option>
+                      <option value="false">Privada</option>
+                  </select>
+                  <br>
+                  <br>
+                  <button type="submit" class="btn btn-xl" onclick="mintBat()" style="padding: 9px">Crear</button>
+              </div>
+              <div style="padding: 20px">
+                  <h4>Retirar de circulación:</h4>
+                  <input type="text" placeholder="Identificador batería *" id="burnId">
+                  <button type="submit" class="btn btn-xl" onclick="burnBat()" style="padding: 9px">Retirar</button>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Contacta</h2>
+                    <h3 class="section-subheading text-muted">Guillermo Pérez Alba</h3>
+                    <h3 class="section-subheading text-muted">gperezalba94@gmail.com</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright">Copyright &copy; Your Website 2019</span>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline social-buttons">
+                        <li><a href="#"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline quicklinks">
+                        <li><a href="#">Privacy Policy</a>
+                        </li>
+                        <li><a href="#">Terms of Use</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" integrity="sha384-mE6eXfrb8jxl0rzJDBRanYqgBxtJ6Unn4/1F7q4xRRyIw7Vdg9jP4ycT7x1iVsgb" crossorigin="anonymous"></script>
+
+
+    <!-- Theme JavaScript -->
+    <script src="js/agency.min.js"></script>
+
+
+</body>
+
+</html>
