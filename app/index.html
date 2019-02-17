@@ -143,7 +143,13 @@
             </div>
             <div class="row text-center">
                 <h4>Proponer intercambio:</h4>
-                <h5>De:</h5>
+                <select name="From" id="exchangeType">
+                    <option value="0">BATERÍA - BATERÍA</option>
+                    <option value="1">BATERÍA - TOKENS</option>
+                    <option value="2">PRIVADO (Entrega al punto de carga)</option>
+                    <option value="3">PRIVADO (Entrega al propietario)</option>
+                </select>
+                <h5 id="exchangeHeader">De:</h5>
                 <select name="From" id="From">
                     <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
                     <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
@@ -156,7 +162,7 @@
                     <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
                     <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
                 </select>
-                <h5>Para:</h5>
+                <h5 id="exchangeHeader2">Para:</h5>
                 <select name="To" id="To">
                     <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
                     <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
@@ -236,8 +242,8 @@
                   <input type="text" placeholder="Precio inicial *" id="initValue">
                   <br>
                   <select class="" id="publicDomain">
-                      <option value="true">Pública</option>
-                      <option value="false">Privada</option>
+                      <option value="1">Pública</option>
+                      <option value="0">Privada</option>
                   </select>
                   <br>
                   <br>

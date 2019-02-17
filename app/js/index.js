@@ -73,12 +73,21 @@ async function proposeExchange() {
   var executerIndex = executerElement.options[executerElement.selectedIndex].value;
   var executerAccount = publicKeys[executerIndex];
   var response2 = await contract.methods.batteriesOfOwner(executerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
+  if(response2.length == 0) response2.push("0");
   var item2Element = document.getElementById("itemProposer");
   var item2 = response2[item2Element.selectedIndex];
   var chargeLevel1 = document.getElementById("chargeLevel1").value;
   var chargeLevel2 = document.getElementById("chargeLevel2").value;
+  var typeElement = document.getElementById("exchangeType");
+  var type = typeElement.options[typeElement.selectedIndex].value;
+  if (parseInt(type) == 3) {
+    var aux = executerAccount;
+    executerAccount = proposerAccount;
+    proposerAccount = aux;
+  }
   var response3 = await contract.methods.proposeExchange(parseInt(item1), parseInt(item2), parseInt(chargeLevel1), parseInt(chargeLevel2), executerAccount).send({from: proposerAccount, gas: 300000});
   alert("Intercambio propuesto con ID: " + response3.events.Proposal.returnValues.proposalId);
+  addOptions();
 }
 
 async function executeExchange() {
@@ -102,6 +111,7 @@ async function executeExchange() {
     " tokens al usuario " +
     response.events.Transfer.returnValues.to
   );
+  addOptions();
 }
 
 async function addOptions() {
@@ -129,17 +139,46 @@ async function addOptions() {
   var response2 = await contract.methods.batteriesOfOwner(executerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
   var select2 = document.getElementById("itemExecuter");
   select2.innerHTML = "";
-  if (response2.length == 0) {
-    var option2 = document.createElement("option");
-    option2.text = "No tiene baterías...";
-    select2.add(option2);
+  var array = ["0"];
+  for (i in response2) {
+    array.push(response2[i]);
   }
-  for (value2 in response2) {
+  for (value2 in array) {
     var option2 = document.createElement("option");
-    option2.text = response2[value2];
+    option2.text = array[value2];
     select2.add(option2);
   }
 }
+
+async function changeType() {
+  var temporizador = setInterval(function() {
+    var typeElement = document.getElementById("exchangeType");
+    var type = typeElement.options[typeElement.selectedIndex].value;
+    if(type == 1 || type == 2 || type == 3){
+      document.getElementById("chargeLevel2").value = 0;
+      document.getElementById("chargeLevel2").readOnly = true;
+      document.getElementById("itemExecuter").selectedIndex = 0;
+      document.getElementById("itemExecuter").disabled = true;
+    } else if (type == 0) {
+      document.getElementById("chargeLevel2").readOnly = false;
+      document.getElementById("itemExecuter").disabled = false;
+    }
+    if(type == 0) {
+      exchangeHeader.innerHTML = "De:";
+      exchangeHeader2.innerHTML = "Para:";
+    } else if (type == 1) {
+      exchangeHeader.innerHTML = "Vendedor:";
+      exchangeHeader2.innerHTML = "Comprador:";
+    } else if (type == 2) {
+      exchangeHeader.innerHTML = "Propietario:";
+      exchangeHeader2.innerHTML = "Punto de carga:";
+    } else if (type == 3) {
+      exchangeHeader.innerHTML = "Propietario:";
+      exchangeHeader2.innerHTML = "Punto de carga:";
+    }
+  }, 100);
+}
+changeType();
 
 async function changeFrom() {
   let accounts = await web3.eth.getAccounts();
@@ -172,13 +211,18 @@ async function mintBat() {
   var fabricAccount = publicKeys[fabricIndex];
   var domainElement = document.getElementById("publicDomain");
   var domain = domainElement.options[domainElement.selectedIndex].value;
+  if(parseInt(domain) == 1){
+    var domainBool = true;
+  } else {
+    var domainBool = false;
+  }
   var value = document.getElementById("initValue").value;
-  var response = await contract.methods.mintBat(domain, parseInt(value)).send({from: fabricAccount, gas: 300000});
+  var response = await contract.methods.mintBat(domainBool, parseInt(value)).send({from: fabricAccount, gas: 300000});
   alert("Batería creada con ID: " + response.events.MintBat.returnValues.id);
 }
 
 async function burnBat() {
-  var fabricElement = document.getElementById("Executer");
+  var fabricElement = document.getElementById("Fabric");
   var fabricIndex = fabricElement.options[fabricElement.selectedIndex].value;
   var fabricAccount = publicKeys[fabricIndex];
   var id = document.getElementById("burnId").value;
