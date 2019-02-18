@@ -151,12 +151,16 @@ contract BatteryToken is ERC20 {
             super.transferFrom(_exchanges[_exchangeId].proposer, msg.sender, _exchanges[_exchangeId].valueExecuter.sub(_exchanges[_exchangeId].valueProposer));
         }
         if (_battery[_exchanges[_exchangeId].itemProposer].publicDomain) {
-            removeFromArray(_exchanges[_exchangeId].itemProposer, _exchanges[_exchangeId].proposer);
-            removeFromArray(_exchanges[_exchangeId].itemExecuter, msg.sender);
-            _batteryOwner[_exchanges[_exchangeId].itemProposer] = msg.sender;
-            _batteryOwner[_exchanges[_exchangeId].itemExecuter] = _exchanges[_exchangeId].proposer;
-            _indexOfId[_exchanges[_exchangeId].itemProposer] = _batteriesByOwner[msg.sender].push(_exchanges[_exchangeId].itemProposer);
-            _indexOfId[_exchanges[_exchangeId].itemExecuter] = _batteriesByOwner[_exchanges[_exchangeId].proposer].push(_exchanges[_exchangeId].itemExecuter);
+            if (_exchanges[_exchangeId].itemProposer != 0) {
+                removeFromArray(_exchanges[_exchangeId].itemProposer, _exchanges[_exchangeId].proposer);
+                _batteryOwner[_exchanges[_exchangeId].itemProposer] = msg.sender;
+                _indexOfId[_exchanges[_exchangeId].itemProposer] = _batteriesByOwner[msg.sender].push(_exchanges[_exchangeId].itemProposer);
+            }
+            if (_exchanges[_exchangeId].itemExecuter != 0) {
+                removeFromArray(_exchanges[_exchangeId].itemExecuter, msg.sender);
+                _batteryOwner[_exchanges[_exchangeId].itemExecuter] = _exchanges[_exchangeId].proposer;
+                _indexOfId[_exchanges[_exchangeId].itemExecuter] = _batteriesByOwner[_exchanges[_exchangeId].proposer].push(_exchanges[_exchangeId].itemExecuter);
+            }
         } else if (msg.sender == _batteryOwner[_exchanges[_exchangeId].itemProposer]) {
             //retirada
             _battery[_exchanges[_exchangeId].itemProposer].privateCharger = address(0);
