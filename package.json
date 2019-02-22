@@ -1,0 +1,27 @@
+{
+  "name": "batterytoken",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/gperezalba/batterytoken.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/gperezalba/batterytoken/issues"
+  },
+  "homepage": "https://gitlab.com/gperezalba/batterytoken#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-bignumber": "^3.0.0",
+    "truffle-assertions": "^0.8.0"
+  }
+}
