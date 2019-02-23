@@ -81,7 +81,7 @@ contract BatteryToken is ERC20 {
     /// @param _value Initial value of the battery
     /// @return the ID of the new battery
     function mintBat(bool _publicDomain, uint256 _value) public returns (uint256) {
-        //todos pueden añadir baterias? hacer un require para solo algunas address autorizadas?
+        //todos pueden anhadir baterias? hacer un require para solo algunas address autorizadas?
         globalId = globalId.add(1);
         _batteryOwner[globalId] = msg.sender;
         _battery[globalId].publicDomain = _publicDomain;
@@ -152,7 +152,7 @@ contract BatteryToken is ERC20 {
         if (_exchanges[_exchangeId].valueProposer <= _exchanges[_exchangeId].valueExecuter){
             super.approve(_executer, _exchanges[_exchangeId].valueExecuter.sub(_exchanges[_exchangeId].valueProposer));
             //redefinir aqui la funcion approve para que si expira el tiempo pierda lo aprobado
-            //o para no jugarsela con esto hacer que el más caro proponga y el mas barato execute
+            //o para no jugarsela con esto hacer que el mas caro proponga y el mas barato execute
         }
         _exchanges[_exchangeId].proposedTime = block.timestamp;
         _exchanges[_exchangeId].proposed = true;
