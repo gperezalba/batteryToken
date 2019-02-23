@@ -3,12 +3,12 @@ pragma solidity >=0.4.21 <0.6.0;
 import "./SafeMath.sol";
 import "./ERC20.sol";
 
-/// @author Guillermo Pérez Alba
+/// @author Guillermo Perez Alba
 /// @title A token designed to exchange motocycle's batteries
 contract BatteryToken is ERC20 {
     using SafeMath for uint256;
 
-    //Añadir el cambio de ownership y revisar visibilidad de todo
+    //Anhadir el cambio de ownership y revisar visibilidad de todo
 
     address public owner;
     uint256 public timeRef;
@@ -218,7 +218,7 @@ contract BatteryToken is ERC20 {
     }
 
     /// @dev Mints a certain amount of ERC20 token to the msg.sender
-    /// @param amount the amount of tokens to mint 
+    /// @param amount the amount of tokens to mint
     function mintERC20(uint256 amount) public returns(bool){
         super._mint(msg.sender, amount);
         return true;
