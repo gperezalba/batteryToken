@@ -13,8 +13,8 @@
       4
     ],
     "linebreak-style": [
-      "warning",
-      "windows"
+      "error",
+      "unix"
     ]
   }
 }
