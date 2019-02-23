@@ -44,8 +44,8 @@ solium:
     - npm install -g solium
     - solium -d contracts/
 
-#mythril:
-  #image: sharathkumaranbu/mythril-ci
-  #stage: security
-  #script:
-    #- myth --truffle
+mythril:
+  image: sharathkumaranbu/mythril-ci
+  stage: security
+  script:
+    - myth --truffle
