@@ -35,6 +35,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
         uint256 proposedTime;
         bool proposed;
         bool executed;
+        bool cancelled;
     }
 
     mapping(uint256 => address) batteryOwner;
@@ -47,6 +48,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
     event BurnBat(address own, uint256 id);
     event Proposal(bytes32 proposalId, address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
     event Execution(address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
+    event Cancellation(bytes32 proposalId);
 
     constructor() public {
         owner = msg.sender;
@@ -164,7 +166,8 @@ contract BatteryToken is ERC20, Owned, Mortal {
     /// @param exchangeId the ID of the exchange to execute
     function executeExchange(bytes32 exchangeId) public {
         require(exchanges[exchangeId].proposed, "This exchange id does not exist");
-        //meter un !executed
+        require(!exchanges[exchangeId].executed, "Already executed");
+        require(!exchanges[exchangeId].cancelled, "Execution cancelled");
         require(msg.sender == exchanges[exchangeId].executer, "msg.sender must be the executer");
         require(block.timestamp.sub(exchanges[exchangeId].proposedTime) < PROPOSALTIME, "Proposal time expired");
         if (exchanges[exchangeId].valueProposer >= exchanges[exchangeId].valueExecuter){
@@ -194,11 +197,25 @@ contract BatteryToken is ERC20, Owned, Mortal {
         emit Execution(exchanges[exchangeId].proposer, msg.sender, exchanges[exchangeId].itemProposer, exchanges[exchangeId].itemExecuter);
     }
 
+    // @dev cancell a Proposal in case proposer did an approve
+    // @param exchangeIdthe ID of the exchange to cancell
+    function cancellProposal(bytes32 exchangeId) public {
+        require(exchanges[exchangeId].proposed, "This exchange id does not exist");
+        require(!exchanges[exchangeId].executed, "Already executed");
+        require(msg.sender == exchanges[exchangeId].proposer, "Wrong msg.sender");
+        if (exchanges[exchangeId].valueProposer < exchanges[exchangeId].valueExecuter) {
+            super.decreaseAllowance(exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
+        }
+        exchanges[exchangeId].cancelled = true;
+        emit Cancellation(exchangeId);
+    }
+
     /// @dev Return the value of a certain battery ID with a certain level of charge.
     /// @param itemId the ID of the battery
     /// @param itemChargeLevel the current level of charge of the battery (between 0-100)
     /// @return the current value of the battery
     function getBatValue(uint256 itemId, uint256 itemChargeLevel) public view returns(uint256){
+        require((itemChargeLevel >= 0) || (itemChargeLevel <= 100), "Bad charge level");
         if (itemId == 0) {
             return 0;
         } else {
@@ -211,7 +228,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
                 .mul(battery[itemId].initialValue.sub(block.timestamp.sub(battery[itemId].startTime)))
                 .div(battery[itemId].initialValue)
             );
-            require((value >= 0 || value <= battery[itemId].initialValue.add(CHARGEPRICE)), "Bad value");
+            assert(value >= 0 || value <= battery[itemId].initialValue.add(CHARGEPRICE));
             return value;
         }
 
