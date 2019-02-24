@@ -2,10 +2,12 @@ pragma solidity 0.4.25;
 
 import "./SafeMath.sol";
 import "./ERC20.sol";
+import "./Owned.sol";
+import "./Mortal.sol";
 
 /// @author Guillermo Perez Alba
 /// @title A token designed to exchange motocycle's batteries
-contract BatteryToken is ERC20 {
+contract BatteryToken is ERC20, Owned, Mortal {
     using SafeMath for uint256;
 
     //Anhadir el cambio de ownership y revisar visibilidad de todo
