@@ -149,7 +149,7 @@ contract("BatteryToken", async (accounts) => {
       { from: account1 }
     );
     let exchangeId = response.logs[0].args.proposalId;
-    let response2 = await instance.cancellProposal(exchangeId, { from: account1 });
+    let response2 = await instance.cancelProposal(exchangeId, { from: account1 });
     truffleAssert.eventEmitted(response2, 'Cancellation', (ev) => {
       return ev.proposalId == exchangeId;
     });
@@ -239,7 +239,7 @@ contract("BatteryToken", async (accounts) => {
     let item2 = parseInt(mint2.logs[0].args.id.c);
     let response = await instance.proposeExchange(item1, item2, 98, 7, account2, { from: account1 });
     let exchangeId = response.logs[1].args.proposalId;
-    let response2 = await instance.cancellProposal(exchangeId, { from: account1 });
+    let response2 = await instance.cancelProposal(exchangeId, { from: account1 });
     truffleAssert.eventEmitted(response2, 'Approval', (ev) => {
       return ev.owner == account1 &&
         ev.spender == account2;

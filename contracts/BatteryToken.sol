@@ -199,7 +199,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
 
     // @dev cancell a Proposal in case proposer did an approve
     // @param exchangeIdthe ID of the exchange to cancell
-    function cancellProposal(bytes32 exchangeId) public {
+    function cancelProposal(bytes32 exchangeId) public {
         require(exchanges[exchangeId].proposed, "This exchange id does not exist");
         require(!exchanges[exchangeId].executed, "Already executed");
         require(msg.sender == exchanges[exchangeId].proposer, "Wrong msg.sender");
