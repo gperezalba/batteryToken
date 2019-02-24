@@ -10,8 +10,6 @@ import "./Mortal.sol";
 contract BatteryToken is ERC20, Owned, Mortal {
     using SafeMath for uint256;
 
-    //Anhadir el cambio de ownership y revisar visibilidad de todo
-
     address public owner;
     uint256 public timeRef;
     uint256 public globalId;
