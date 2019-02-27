@@ -106,7 +106,7 @@ async function proposeExchange() {
     executerAccount = proposerAccount;
     proposerAccount = aux;
   }
-  var response3 = await contract.methods.proposeExchange(parseInt(item1), parseInt(item2), parseInt(chargeLevel1), parseInt(chargeLevel2), executerAccount).send({from: proposerAccount, gas: 300000});
+  var response3 = await contract.methods.proposeExchange(parseInt(item1), parseInt(item2), parseInt(chargeLevel1), parseInt(chargeLevel2), executerAccount).send({from: proposerAccount, gas: 3000000});
   alert("Intercambio propuesto con ID: " + response3.events.Proposal.returnValues.proposalId);
   addOptions();
 }
@@ -116,7 +116,8 @@ async function executeExchange() {
   var executerIndex = executerElement.options[executerElement.selectedIndex].value;
   var executerAccount = publicKeys[executerIndex];
   var exchangeId = document.getElementById("exchangeId").value;
-  var response = await contract.methods.executeExchange(exchangeId).send({from: executerAccount, gas: 300000});
+  var response = await contract.methods.executeExchange(exchangeId).send({from: executerAccount, gas: 3000000});
+  console.log(response)
   alert("Usuario " +
     response.events.Execution.returnValues.emiter +
     " entrega batería con ID " +
@@ -124,13 +125,7 @@ async function executeExchange() {
     "\nUsuario " +
     response.events.Execution.returnValues.executer +
     " entrega batería con ID " +
-    response.events.Execution.returnValues.itemExecuter +
-    "\nEl usuario " +
-    response.events.Transfer.returnValues.from +
-    " transfiere " +
-    response.events.Transfer.returnValues.value +
-    " tokens al usuario " +
-    response.events.Transfer.returnValues.to
+    response.events.Execution.returnValues.itemExecuter
   );
   addOptions();
 }

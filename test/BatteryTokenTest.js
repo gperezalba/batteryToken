@@ -159,8 +159,8 @@ contract("BatteryToken", async (accounts) => {
     let instance = await BatteryToken.deployed();
     const account1 = accounts[1];
     const account2 = accounts[2];
-    await instance.mintERC20(1000, { from: account1 });
-    await instance.mintERC20(1000, { from: account2 });
+    await instance.mintERC20(1000000, { from: account1 });
+    await instance.mintERC20(1000000, { from: account2 });
     var mint1 = await instance.mintBat(true, 120, { from: account1 });
     var mint2 = await instance.mintBat(true, 300, { from: account2 });
     let item1 = parseInt(mint1.logs[0].args.id.c);
@@ -201,7 +201,7 @@ contract("BatteryToken", async (accounts) => {
         ev.itemExecuter == item2;
     });
     let owner1 = await instance.ownerOf.call(item1, { from: account1 });
-    let owner2 = await instance.ownerOf.call(item2, { from: account1 });
+    let owner2 = await instance.ownerOf.call(item2, { from: account2 });
     expect(owner1).to.equal(account2) &&
     expect(owner2).to.equal(account1);
   });
@@ -228,26 +228,6 @@ contract("BatteryToken", async (accounts) => {
     expect(owner1).to.equal(account2) &&
     expect(owner2).to.equal(account1);
   });
-
-  it("should cancell a proposal with TransferFrom", async () => {
-    let instance = await BatteryToken.deployed();
-    const account1 = accounts[1];
-    const account2 = accounts[2];
-    var mint1 = await instance.mintBat(true, 120, { from: account1 });
-    let item1 = parseInt(mint1.logs[0].args.id.c);
-    var mint2 = await instance.mintBat(true, 370, { from: account2 });
-    let item2 = parseInt(mint2.logs[0].args.id.c);
-    let response = await instance.proposeExchange(item1, item2, 98, 7, account2, { from: account1 });
-    let exchangeId = response.logs[1].args.proposalId;
-    let response2 = await instance.cancelProposal(exchangeId, { from: account1 });
-    truffleAssert.eventEmitted(response2, 'Approval', (ev) => {
-      return ev.owner == account1 &&
-        ev.spender == account2;
-    });
-    truffleAssert.eventEmitted(response2, 'Cancellation', (ev) => {
-      return ev.proposalId == exchangeId;
-    });
-  })
 
   it("should propose a private exchange (Delivery)", async () => {
     let instance = await BatteryToken.deployed();

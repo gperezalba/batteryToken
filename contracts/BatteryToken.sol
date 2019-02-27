@@ -41,12 +41,15 @@ contract BatteryToken is ERC20, Owned, Mortal {
     mapping(address => uint256[]) batteriesByOwner;
     mapping(uint256 => uint256) indexOfId; //starting since 1, use index-1
     mapping(bytes32 => Exchange) exchanges;
+    mapping(address => uint256) lockedBalances;
+    mapping(uint256 => address) lockedBatteries;
 
     event MintBat(address own, uint256 id, bool domain, uint time);
     event BurnBat(address own, uint256 id);
     event Proposal(bytes32 proposalId, address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
     event Execution(address emiter, address executer, uint256 itemEmiter, uint256 itemExecuter);
     event Cancellation(bytes32 proposalId);
+    event Debug(uint256, uint256, uint256);
 
     constructor() public {
         owner = msg.sender;
@@ -106,19 +109,6 @@ contract BatteryToken is ERC20, Owned, Mortal {
         emit BurnBat(msg.sender, id);
     }
 
-    /// @dev Remove a battery of the array of batteries for an owner
-    /// @param id the ID of the battery
-    /// @param who the address of the current owner
-    function removeFromArray (uint256 id, address who) private {
-        uint256 index = indexOfId[id];
-        if (index == 0) return;
-
-        if(batteriesByOwner[who].length > 1) {
-            batteriesByOwner[who][index.sub(1)] = batteriesByOwner[who][batteriesByOwner[who].length.sub(1)];
-        }
-        batteriesByOwner[who].length --;
-    }
-
     /// @dev Propose an exchange of batteries (or token) to another address
     /// @param itemProposer ID of the battery the proposer exchanges
     /// @param itemExecuter ID of the battery the executer exchanges. Is 0 when Sell or Private Exchange
@@ -148,12 +138,10 @@ contract BatteryToken is ERC20, Owned, Mortal {
         } else {
             exchanges[exchangeId].valueProposer = CHARGEPRICE.mul(proposerChargeLevel).div(100).mul(getBatValue(itemProposer, 100)).div(battery[itemProposer].initialValue);
         }
-
-        if (exchanges[exchangeId].valueProposer <= exchanges[exchangeId].valueExecuter){
-            super.approve(executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
-            //redefinir aqui la funcion approve para que si expira el tiempo pierda lo aprobado
-            //o para no jugarsela con esto hacer que el mas caro proponga y el mas barato execute
+        if (exchanges[exchangeId].valueProposer < exchanges[exchangeId].valueExecuter){
+            lockBalance(exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
         }
+        if (battery[itemProposer].publicDomain) { lockBattery(itemProposer); }
         exchanges[exchangeId].proposedTime = block.timestamp;
         exchanges[exchangeId].proposed = true;
         emit Proposal(exchangeId, msg.sender, executer, itemProposer, itemExecuter);
@@ -168,31 +156,11 @@ contract BatteryToken is ERC20, Owned, Mortal {
         require(!exchanges[exchangeId].cancelled, "Execution cancelled");
         require(msg.sender == exchanges[exchangeId].executer, "msg.sender must be the executer");
         require(block.timestamp.sub(exchanges[exchangeId].proposedTime) < PROPOSALTIME, "Proposal time expired");
-        if (exchanges[exchangeId].valueProposer >= exchanges[exchangeId].valueExecuter){
-            super.transfer(exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter));
-        } else {
-            super.transferFrom(exchanges[exchangeId].proposer, msg.sender, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
+        if (exchanges[exchangeId].valueProposer > exchanges[exchangeId].valueExecuter){
+            lockBalance(exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter));
         }
-        if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
-            if (exchanges[exchangeId].itemProposer != 0) {
-                removeFromArray(exchanges[exchangeId].itemProposer, exchanges[exchangeId].proposer);
-                batteryOwner[exchanges[exchangeId].itemProposer] = msg.sender;
-                indexOfId[exchanges[exchangeId].itemProposer] = batteriesByOwner[msg.sender].push(exchanges[exchangeId].itemProposer);
-            }
-            if (exchanges[exchangeId].itemExecuter != 0) {
-                removeFromArray(exchanges[exchangeId].itemExecuter, msg.sender);
-                batteryOwner[exchanges[exchangeId].itemExecuter] = exchanges[exchangeId].proposer;
-                indexOfId[exchanges[exchangeId].itemExecuter] = batteriesByOwner[exchanges[exchangeId].proposer].push(exchanges[exchangeId].itemExecuter);
-            }
-        } else if (msg.sender == batteryOwner[exchanges[exchangeId].itemProposer]) {
-            //retirada
-            battery[exchanges[exchangeId].itemProposer].privateCharger = address(0);
-        } else {
-            //entrega al pto carga
-            battery[exchanges[exchangeId].itemProposer].privateCharger = msg.sender;
-        }
-        exchanges[exchangeId].executed = true;
-        emit Execution(exchanges[exchangeId].proposer, msg.sender, exchanges[exchangeId].itemProposer, exchanges[exchangeId].itemExecuter);
+        if (exchanges[exchangeId].itemExecuter != 0) { lockBattery(exchanges[exchangeId].itemExecuter); }
+        finishExchange(exchangeId);
     }
 
     // @dev cancell a Proposal in case proposer did an approve
@@ -201,9 +169,8 @@ contract BatteryToken is ERC20, Owned, Mortal {
         require(exchanges[exchangeId].proposed, "This exchange id does not exist");
         require(!exchanges[exchangeId].executed, "Already executed");
         require(msg.sender == exchanges[exchangeId].proposer, "Wrong msg.sender");
-        if (exchanges[exchangeId].valueProposer < exchanges[exchangeId].valueExecuter) {
-            super.decreaseAllowance(exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
-        }
+        unlockBalance();
+        unlockBattery(exchanges[exchangeId].itemProposer);
         exchanges[exchangeId].cancelled = true;
         emit Cancellation(exchangeId);
     }
@@ -237,6 +204,82 @@ contract BatteryToken is ERC20, Owned, Mortal {
     function mintERC20(uint256 amount) public returns(bool){
         super._mint(msg.sender, amount);
         return true;
+    }
+
+    function lockBalance(uint256 amount) private {
+        require(amount >= 0, "Negative amount");
+        require(balanceOf(msg.sender) >= amount, "Not enough balance");
+        transfer(address(this), amount);
+        lockedBalances[msg.sender] = lockedBalances[msg.sender].add(amount);
+    }
+
+    function unlockBalance() private {
+        this.transfer(msg.sender, lockedBalances[msg.sender]);
+    }
+
+    function lockBattery(uint256 id) private {
+        require(msg.sender == batteryOwner[id], "Not the owner to lock");
+        changeBatteryOwner(address(this), id);
+        lockedBatteries[id] = msg.sender;
+    }
+
+    function unlockBattery(uint256 id) private {
+        require(msg.sender == lockedBatteries[id], "Not the owner to unlock");
+        this.changeBatteryOwner(lockedBatteries[id], id);
+    }
+
+    function changeBatteryOwner(address newOwner, uint256 id) public {
+        require(msg.sender == batteryOwner[id], "Not the owner to change");
+        removeFromArray(id, msg.sender);
+        batteryOwner[id] = newOwner;
+        indexOfId[id] = batteriesByOwner[newOwner].push(id);
+    }
+
+    function finishExchange(bytes32 exchangeId) private {
+        if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
+            require(address(this) == batteryOwner[exchanges[exchangeId].itemProposer], "Proposer's battery not locked");
+        }
+        if (battery[exchanges[exchangeId].itemExecuter].publicDomain) {
+            require(address(this) == batteryOwner[exchanges[exchangeId].itemExecuter], "Executor's battery not locked");
+        }
+        if (exchanges[exchangeId].valueProposer > exchanges[exchangeId].valueExecuter){
+            require(lockedBalances[exchanges[exchangeId].executer] >= exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter), "Exec balance not locked");
+            this.transfer(exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter));
+        } else {
+            require(lockedBalances[exchanges[exchangeId].proposer] >= exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer), "Prop balance not locked");
+            this.transfer(exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
+        }
+        if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
+            if (exchanges[exchangeId].itemProposer != 0) {
+                this.changeBatteryOwner(exchanges[exchangeId].executer, exchanges[exchangeId].itemProposer);
+            }
+            if (exchanges[exchangeId].itemExecuter != 0) {
+                this.changeBatteryOwner(exchanges[exchangeId].proposer, exchanges[exchangeId].itemExecuter);
+            }
+        } else if (msg.sender == batteryOwner[exchanges[exchangeId].itemProposer]) {
+            //retirada
+            battery[exchanges[exchangeId].itemProposer].privateCharger = address(0);
+        } else {
+            //entrega al pto carga
+            battery[exchanges[exchangeId].itemProposer].privateCharger = msg.sender;
+        }
+        exchanges[exchangeId].executed = true;
+        emit Execution(exchanges[exchangeId].proposer, msg.sender, exchanges[exchangeId].itemProposer, exchanges[exchangeId].itemExecuter);
+    }
+
+    /// @dev Remove a battery of the array of batteries for an owner
+    /// @param id the ID of the battery
+    /// @param who the address of the current owner
+    function removeFromArray (uint256 id, address who) private {
+        uint256 index = indexOfId[id];
+        if (index == 0) return;
+        if (batteriesByOwner[who].length != 0){
+            if (batteriesByOwner[who].length > 1) {
+                batteriesByOwner[who][index.sub(1)] = batteriesByOwner[who][batteriesByOwner[who].length.sub(1)];
+                indexOfId[batteriesByOwner[who][index.sub(1)]] = index;
+            }
+            batteriesByOwner[who].length --;
+        }
     }
 
 }
