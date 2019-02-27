@@ -87,16 +87,15 @@ async function proposeExchange() {
   var proposerElement = document.getElementById("From");
   var proposerIndex = proposerElement.options[proposerElement.selectedIndex].value;
   var proposerAccount = publicKeys[proposerIndex];
-  var response = await contract.methods.batteriesOfOwner(proposerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
+  //var response = await contract.methods.batteriesOfOwner(proposerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
   var item1Element = document.getElementById("itemProposer");
-  var item1 = response[item1Element.selectedIndex];
+  var item1 = item1Element.options[item1Element.selectedIndex].value;
   var executerElement = document.getElementById("To");
   var executerIndex = executerElement.options[executerElement.selectedIndex].value;
   var executerAccount = publicKeys[executerIndex];
-  var response2 = await contract.methods.batteriesOfOwner(executerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
-  if(response2.length == 0) response2.push("0");
-  var item2Element = document.getElementById("itemProposer");
-  var item2 = response2[item2Element.selectedIndex];
+  //if(response2.length == 0) { response2.push("0"); }
+  var item2Element = document.getElementById("itemExecuter");
+  var item2 = item2Element.options[item2Element.selectedIndex].value;
   var chargeLevel1 = document.getElementById("chargeLevel1").value;
   var chargeLevel2 = document.getElementById("chargeLevel2").value;
   var typeElement = document.getElementById("exchangeType");
@@ -106,6 +105,7 @@ async function proposeExchange() {
     executerAccount = proposerAccount;
     proposerAccount = aux;
   }
+  if (parseInt(type) == 1 || parseInt(type) == 2 || parseInt(type) == 3) { item2 = 0; }
   var response3 = await contract.methods.proposeExchange(parseInt(item1), parseInt(item2), parseInt(chargeLevel1), parseInt(chargeLevel2), executerAccount).send({from: proposerAccount, gas: 3000000});
   alert("Intercambio propuesto con ID: " + response3.events.Proposal.returnValues.proposalId);
   addOptions();
@@ -117,7 +117,6 @@ async function executeExchange() {
   var executerAccount = publicKeys[executerIndex];
   var exchangeId = document.getElementById("exchangeId").value;
   var response = await contract.methods.executeExchange(exchangeId).send({from: executerAccount, gas: 3000000});
-  console.log(response)
   alert("Usuario " +
     response.events.Execution.returnValues.emiter +
     " entrega batería con ID " +
@@ -135,7 +134,7 @@ async function cancelProposal() {
   var proposerIndex = proposerElement.options[proposerElement.selectedIndex].value;
   var proposerAccount = publicKeys[proposerIndex];
   var exchangeId = document.getElementById("exchangeId2").value;
-  var response = await contract.methods.cancelProposal(exchangeId).send({from: proposerAccount, gas: 300000});
+  var response = await contract.methods.cancelProposal(exchangeId).send({from: proposerAccount, gas: 3000000});
   alert("Se ha cancelado el intercambio con ID: " + response.events.Cancellation.returnValues.proposalId);
 }
 
@@ -149,6 +148,7 @@ async function addOptions() {
   if (response.length == 0) {
     var option = document.createElement("option");
     option.text = "No tiene baterías...";
+    option.value = 0;
     select.add(option);
   }
   for (value in response) {
@@ -164,10 +164,17 @@ async function addOptions() {
   var response2 = await contract.methods.batteriesOfOwner(executerAccount).call({from: web3.eth.defaultAccount, gas: 30000});
   var select2 = document.getElementById("itemExecuter");
   select2.innerHTML = "";
-  var array = ["0"];
-  for (i in response2) {
-    array.push(response2[i]);
+  //var array = ["0"];
+  //for (i in response2) {
+    //array.push(response2[i]);
+  //}
+  if (response2.length == 0) {
+    var option2 = document.createElement("option");
+    option2.text = "No tiene baterías...";
+    option2.value = 0;
+    select2.add(option2);
   }
+  var array = response2;
   for (value2 in array) {
     var option2 = document.createElement("option");
     option2.text = array[value2];

@@ -214,7 +214,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
     }
 
     function unlockBalance() private {
-        this.transfer(msg.sender, lockedBalances[msg.sender]);
+        if(lockedBalances[msg.sender] != 0) { this.transfer(msg.sender, lockedBalances[msg.sender]); }
     }
 
     function lockBattery(uint256 id) private {
