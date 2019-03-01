@@ -214,7 +214,9 @@ contract BatteryToken is ERC20, Owned, Mortal {
     }
 
     function unlockBalance() private {
-        if(lockedBalances[msg.sender] != 0) { this.transfer(msg.sender, lockedBalances[msg.sender]); }
+        if(lockedBalances[msg.sender] != 0) {
+            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", msg.sender, lockedBalances[msg.sender]));
+        }
     }
 
     function lockBattery(uint256 id) private {
@@ -225,7 +227,7 @@ contract BatteryToken is ERC20, Owned, Mortal {
 
     function unlockBattery(uint256 id) private {
         require(msg.sender == lockedBatteries[id], "Not the owner to unlock");
-        this.changeBatteryOwner(lockedBatteries[id], id);
+        address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", lockedBatteries[id], id));
     }
 
     function changeBatteryOwner(address newOwner, uint256 id) public {
@@ -244,17 +246,17 @@ contract BatteryToken is ERC20, Owned, Mortal {
         }
         if (exchanges[exchangeId].valueProposer > exchanges[exchangeId].valueExecuter){
             require(lockedBalances[exchanges[exchangeId].executer] >= exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter), "Exec balance not locked");
-            this.transfer(exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter));
+            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter)));
         } else {
             require(lockedBalances[exchanges[exchangeId].proposer] >= exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer), "Prop balance not locked");
-            this.transfer(exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
+            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer)));
         }
         if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
             if (exchanges[exchangeId].itemProposer != 0) {
-                this.changeBatteryOwner(exchanges[exchangeId].executer, exchanges[exchangeId].itemProposer);
+                address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].itemProposer));
             }
             if (exchanges[exchangeId].itemExecuter != 0) {
-                this.changeBatteryOwner(exchanges[exchangeId].proposer, exchanges[exchangeId].itemExecuter);
+                address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].itemExecuter));
             }
         } else if (msg.sender == batteryOwner[exchanges[exchangeId].itemProposer]) {
             //retirada
