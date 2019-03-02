@@ -127,6 +127,7 @@
                   <h4>Comprar token:</h4>
                   <input type="text" placeholder="Cantidad *" id="mintAmount">
                   <button type="submit" class="btn btn-xl" onclick="mintERC20()" style="padding: 9px">Comprar</button>
+                  <button type="submit" class="btn btn-xl" onclick="balanceOf()" style="padding: 9px">Consulta tu balance</button>
               </div>
             </div>
         </div>
@@ -192,6 +193,9 @@
                 <br>
                 <br>
                 <button type="submit" class="btn btn-xl" onclick="proposeExchange()">Proponer</button>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-xl" onclick="showExchanges()">Consultar IDs intercambios</button>
                 <br>
                 <br>
                 <h4>Cancelar intercambio:</h4>

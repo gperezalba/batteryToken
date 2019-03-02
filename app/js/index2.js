@@ -24,6 +24,10 @@ var contract = new web3.eth.Contract(contractAbi, contractAddress);
 //calculadora.options.from = publicKeys[0]; //No usar esto
 contract.options.gas = GAS;
 
+var exchanges = [];
+exchanges.push("");
+var lastExchange = 0;
+
 async function changeAdd() {
   web3.eth.defaultAccount = publicKeys[0];
   var currentAccount = web3.eth.defaultAccount;
@@ -80,9 +84,16 @@ async function mintERC20() {
   alert("Añadidos tus " + response.events.Transfer.returnValues.value + " tokens")
 }
 
+async function balanceOf() {
+  await web3.eth.personal.unlockAccount(web3.eth.defaultAccount, password);
+  var balance = await contract.methods.balanceOf(web3.eth.defaultAccount).call({from: web3.eth.defaultAccount});
+  alert("La cuenta " + web3.eth.defaultAccount + " tiene " + balance + " en su cuenta.");
+}
+
 //******************EXCHANGE**************************************//
 
 async function proposeExchange() {
+  var exchangeDetails = []; // [item1, item2, proposerAccount, executerAccount, chargeLevel1, chargeLevel2, exchangeId]
   var proposerElement = document.getElementById("From");
   var proposerIndex = proposerElement.options[proposerElement.selectedIndex].value;
   var proposerAccount = publicKeys[proposerIndex];
@@ -107,8 +118,35 @@ async function proposeExchange() {
   if (parseInt(type) == 1 || parseInt(type) == 2 || parseInt(type) == 3) { item2 = 0; }
   web3.eth.personal.unlockAccount(proposerAccount, password);
   var response3 = await contract.methods.proposeExchange(parseInt(item1), parseInt(item2), parseInt(chargeLevel1), parseInt(chargeLevel2), executerAccount).send({from: proposerAccount});
+  exchangeDetails.push(item1)
+  exchangeDetails.push(item2)
+  exchangeDetails.push(proposerAccount)
+  exchangeDetails.push(executerAccount)
+  exchangeDetails.push(chargeLevel1)
+  exchangeDetails.push(chargeLevel2)
+  exchangeDetails.push(response3.events.Proposal.returnValues.proposalId)
+  exchanges.push(exchangeDetails)
+  lastExchange ++;
   alert("Intercambio propuesto con ID: " + response3.events.Proposal.returnValues.proposalId);
   addOptions();
+}
+
+async function showExchanges() {
+  alert("Último intercambio propuesto:\nBatería entregada: " +
+    exchanges[lastExchange][0] +
+    "\nNivel de carga: " +
+    exchanges[lastExchange][4] +
+    "\nBatería recibida: " +
+    exchanges[lastExchange][1] +
+    "\nNivel de carga: " +
+    exchanges[lastExchange][5] +
+    "\nDe: " +
+    exchanges[lastExchange][2] +
+    "\nPara: " +
+    exchanges[lastExchange][3] +
+    "\nID intercambio: " +
+    exchanges[lastExchange][6]
+  )
 }
 
 async function executeExchange() {
@@ -118,7 +156,6 @@ async function executeExchange() {
   var exchangeId = document.getElementById("exchangeId").value;
   web3.eth.personal.unlockAccount(executerAccount, password);
   var response = await contract.methods.executeExchange(exchangeId).send({from: executerAccount});
-  console.log(response)
   alert("Usuario " +
     response.events.Execution.returnValues.emiter +
     " entrega batería con ID " +
@@ -138,7 +175,6 @@ async function cancelProposal() {
   var exchangeId = document.getElementById("exchangeId2").value;
   web3.eth.personal.unlockAccount(proposerAccount, password);
   var response = await contract.methods.cancelProposal(exchangeId).send({from: proposerAccount});
-  console.log(response)
   alert("Se ha cancelado el intercambio con ID: " + response.events.Cancellation.returnValues.proposalId);
 }
 
