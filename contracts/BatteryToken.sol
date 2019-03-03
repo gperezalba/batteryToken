@@ -206,6 +206,8 @@ contract BatteryToken is ERC20, Owned, Mortal {
         return true;
     }
 
+    /// @dev Locks an amount of ERC20 in the contract account
+    /// @param amount the amount of tokens to lock
     function lockBalance(uint256 amount) private {
         require(amount >= 0, "Negative amount");
         require(balanceOf(msg.sender) >= amount, "Not enough balance");
@@ -213,23 +215,35 @@ contract BatteryToken is ERC20, Owned, Mortal {
         lockedBalances[msg.sender] = lockedBalances[msg.sender].add(amount);
     }
 
+    /// @dev Unlocks the amount of ERC20 locked in the contract account for the msg.sender
     function unlockBalance() private {
         if(lockedBalances[msg.sender] != 0) {
-            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", msg.sender, lockedBalances[msg.sender]));
+            if (!address(this).call(abi.encodeWithSignature("transfer(address,uint256)", msg.sender, lockedBalances[msg.sender]))) {
+                revert("Error when transfer from contract to msgsender");
+            }
         }
     }
 
+    /// @dev Locks a battery in the contract account
+    /// @param id the ID of the battery to lock
     function lockBattery(uint256 id) private {
         require(msg.sender == batteryOwner[id], "Not the owner to lock");
         changeBatteryOwner(address(this), id);
         lockedBatteries[id] = msg.sender;
     }
 
+    /// @dev Unlocks a battery and returns it to the original owner
+    /// @param id the ID of the battery to unlock
     function unlockBattery(uint256 id) private {
         require(msg.sender == lockedBatteries[id], "Not the owner to unlock");
-        address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", lockedBatteries[id], id));
+        if (!address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", lockedBatteries[id], id))) {
+            revert("Error when changeBatteryOwner from contract to msg.sender");
+        }
     }
 
+    /// @dev Changes the owner of a certain battery
+    /// @param newOwner the address of the new owner
+    /// @param id the ID of the battery to change the owner
     function changeBatteryOwner(address newOwner, uint256 id) public {
         require(msg.sender == batteryOwner[id], "Not the owner to change");
         removeFromArray(id, msg.sender);
@@ -237,6 +251,8 @@ contract BatteryToken is ERC20, Owned, Mortal {
         indexOfId[id] = batteriesByOwner[newOwner].push(id);
     }
 
+    /// @dev Checks the conditions to finish the exchange and does the exchange
+    /// @param exchangeId ID of the exchange 
     function finishExchange(bytes32 exchangeId) private {
         if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
             require(address(this) == batteryOwner[exchanges[exchangeId].itemProposer], "Proposer's battery not locked");
@@ -246,23 +262,31 @@ contract BatteryToken is ERC20, Owned, Mortal {
         }
         if (exchanges[exchangeId].valueProposer > exchanges[exchangeId].valueExecuter){
             require(lockedBalances[exchanges[exchangeId].executer] >= exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter), "Exec balance not locked");
-            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter)));
+            lockedBalances[exchanges[exchangeId].executer] = lockedBalances[exchanges[exchangeId].executer].sub(exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter));
+            if (!address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].valueProposer.sub(exchanges[exchangeId].valueExecuter)))) {
+                revert("Error when transfer from contract to proposer");
+            }
         } else {
             require(lockedBalances[exchanges[exchangeId].proposer] >= exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer), "Prop balance not locked");
-            address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer)));
+            lockedBalances[exchanges[exchangeId].proposer] = lockedBalances[exchanges[exchangeId].proposer].sub(exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer));
+            if (!address(this).call(abi.encodeWithSignature("transfer(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].valueExecuter.sub(exchanges[exchangeId].valueProposer)))) {
+                revert("Error when transfer from contract to executer");
+            }
         }
         if (battery[exchanges[exchangeId].itemProposer].publicDomain) {
             if (exchanges[exchangeId].itemProposer != 0) {
-                address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].itemProposer));
+                if (!address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].executer, exchanges[exchangeId].itemProposer))) {
+                    revert("Error when changeBatteryOwner from contract to executer");
+                }
             }
             if (exchanges[exchangeId].itemExecuter != 0) {
-                address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].itemExecuter));
+                if (!address(this).call(abi.encodeWithSignature("changeBatteryOwner(address,uint256)", exchanges[exchangeId].proposer, exchanges[exchangeId].itemExecuter))) {
+                    revert("Error when changeBatteryOwner from contract to proposer");
+                }
             }
         } else if (msg.sender == batteryOwner[exchanges[exchangeId].itemProposer]) {
-            //retirada
             battery[exchanges[exchangeId].itemProposer].privateCharger = address(0);
         } else {
-            //entrega al pto carga
             battery[exchanges[exchangeId].itemProposer].privateCharger = msg.sender;
         }
         exchanges[exchangeId].executed = true;
