@@ -32,7 +32,7 @@
     <![endif]-->
 
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/index2.js"></script>
 
 </head>
 
@@ -96,16 +96,16 @@
             </div>
             <div class="row text-center">
               <select name="Addresses" id="Addresses">
-                  <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
-                  <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
-                  <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
-                  <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
-                  <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
-                  <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
-                  <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
-                  <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
-                  <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
-                  <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                  <option value="0">USUARIO 1 - (0x994319e1b1de09aac4aa5b225a7d5cade79d04ed)</option>
+                  <option value="1">USUARIO 2 - (0x66c5a820d0e743fc7030f02aa873875c84a88f3f)</option>
+                  <option value="2">USUARIO 3 - (0x34322a678b16ce26fc0e2bdde1e3c1b666a34a66)</option>
+                  <option value="3">USUARIO 4 - (0xfc3b00c03b74ee1d94fa10e21aef4e6e9710e8a8)</option>
+                  <option value="4">USUARIO 5 - (0xf76c62480a8a6a83451eeef40d331ed179da7f89)</option>
+                  <option value="5">USUARIO 6 - (0x7b1b6d29cb425887d1bc4849d0708091bcbaf16b)</option>
+                  <option value="6">USUARIO 7 - (0x12e3bb9f253bd233e03bd696b1c558a056179b87)</option>
+                  <option value="7">USUARIO 8 - (0x59bedaa81edfd70b8e370a96cf29ee327e84e551)</option>
+                  <option value="8">USUARIO 9 - (0x9a63729158a93f502935bc322af78e4f25a5cc02)</option>
+                  <option value="9">USUARIO 10 - (0xab2c680816421e56ba3274a37c3df455fba32725)</option>
               </select>
               <br>
               <div style="padding: 20px">
@@ -127,6 +127,7 @@
                   <h4>Comprar token:</h4>
                   <input type="text" placeholder="Cantidad *" id="mintAmount">
                   <button type="submit" class="btn btn-xl" onclick="mintERC20()" style="padding: 9px">Comprar</button>
+                  <button type="submit" class="btn btn-xl" onclick="balanceOf()" style="padding: 9px">Consulta tu balance</button>
               </div>
             </div>
         </div>
@@ -151,29 +152,29 @@
                 </select>
                 <h5 id="exchangeHeader">De:</h5>
                 <select name="From" id="From">
-                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
-                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
-                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
-                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
-                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
-                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
-                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
-                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
-                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
-                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                    <option value="0">USUARIO 1 - (0x994319e1b1de09aac4aa5b225a7d5cade79d04ed)</option>
+                    <option value="1">USUARIO 2 - (0x66c5a820d0e743fc7030f02aa873875c84a88f3f)</option>
+                    <option value="2">USUARIO 3 - (0x34322a678b16ce26fc0e2bdde1e3c1b666a34a66)</option>
+                    <option value="3">USUARIO 4 - (0xfc3b00c03b74ee1d94fa10e21aef4e6e9710e8a8)</option>
+                    <option value="4">USUARIO 5 - (0xf76c62480a8a6a83451eeef40d331ed179da7f89)</option>
+                    <option value="5">USUARIO 6 - (0x7b1b6d29cb425887d1bc4849d0708091bcbaf16b)</option>
+                    <option value="6">USUARIO 7 - (0x12e3bb9f253bd233e03bd696b1c558a056179b87)</option>
+                    <option value="7">USUARIO 8 - (0x59bedaa81edfd70b8e370a96cf29ee327e84e551)</option>
+                    <option value="8">USUARIO 9 - (0x9a63729158a93f502935bc322af78e4f25a5cc02)</option>
+                    <option value="9">USUARIO 10 - (0xab2c680816421e56ba3274a37c3df455fba32725)</option>
                 </select>
                 <h5 id="exchangeHeader2">Para:</h5>
                 <select name="To" id="To">
-                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
-                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
-                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
-                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
-                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
-                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
-                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
-                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
-                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
-                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                    <option value="0">USUARIO 1 - (0x994319e1b1de09aac4aa5b225a7d5cade79d04ed)</option>
+                    <option value="1">USUARIO 2 - (0x66c5a820d0e743fc7030f02aa873875c84a88f3f)</option>
+                    <option value="2">USUARIO 3 - (0x34322a678b16ce26fc0e2bdde1e3c1b666a34a66)</option>
+                    <option value="3">USUARIO 4 - (0xfc3b00c03b74ee1d94fa10e21aef4e6e9710e8a8)</option>
+                    <option value="4">USUARIO 5 - (0xf76c62480a8a6a83451eeef40d331ed179da7f89)</option>
+                    <option value="5">USUARIO 6 - (0x7b1b6d29cb425887d1bc4849d0708091bcbaf16b)</option>
+                    <option value="6">USUARIO 7 - (0x12e3bb9f253bd233e03bd696b1c558a056179b87)</option>
+                    <option value="7">USUARIO 8 - (0x59bedaa81edfd70b8e370a96cf29ee327e84e551)</option>
+                    <option value="8">USUARIO 9 - (0x9a63729158a93f502935bc322af78e4f25a5cc02)</option>
+                    <option value="9">USUARIO 10 - (0xab2c680816421e56ba3274a37c3df455fba32725)</option>
                 </select>
                 <h5>Identificador de la batería entregada:</h5>
                 <button type="button" name="button" onclick="addOptions()">Cargar IDs</button>
@@ -194,6 +195,9 @@
                 <button type="submit" class="btn btn-xl" onclick="proposeExchange()">Proponer</button>
                 <br>
                 <br>
+                <button type="submit" class="btn btn-xl" onclick="showExchanges()">Consultar IDs intercambios</button>
+                <br>
+                <br>
                 <h4>Cancelar intercambio:</h4>
                 <input type="text" placeholder="ID (bytes32) *" id="exchangeId2">
                 <br>
@@ -202,16 +206,16 @@
                 <h4>Ejecutar intercambio:</h4>
                 <h5>Ejecutor:</h5>
                 <select name="To" id="Executer">
-                    <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
-                    <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
-                    <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
-                    <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
-                    <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
-                    <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
-                    <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
-                    <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
-                    <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
-                    <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                    <option value="0">USUARIO 1 - (0x994319e1b1de09aac4aa5b225a7d5cade79d04ed)</option>
+                    <option value="1">USUARIO 2 - (0x66c5a820d0e743fc7030f02aa873875c84a88f3f)</option>
+                    <option value="2">USUARIO 3 - (0x34322a678b16ce26fc0e2bdde1e3c1b666a34a66)</option>
+                    <option value="3">USUARIO 4 - (0xfc3b00c03b74ee1d94fa10e21aef4e6e9710e8a8)</option>
+                    <option value="4">USUARIO 5 - (0xf76c62480a8a6a83451eeef40d331ed179da7f89)</option>
+                    <option value="5">USUARIO 6 - (0x7b1b6d29cb425887d1bc4849d0708091bcbaf16b)</option>
+                    <option value="6">USUARIO 7 - (0x12e3bb9f253bd233e03bd696b1c558a056179b87)</option>
+                    <option value="7">USUARIO 8 - (0x59bedaa81edfd70b8e370a96cf29ee327e84e551)</option>
+                    <option value="8">USUARIO 9 - (0x9a63729158a93f502935bc322af78e4f25a5cc02)</option>
+                    <option value="9">USUARIO 10 - (0xab2c680816421e56ba3274a37c3df455fba32725)</option>
                 </select>
                 <h5>Identificador del intercambio:</h5>
                 <input type="text" placeholder="ID (bytes32) *" id="exchangeId">
@@ -230,16 +234,16 @@
                     <h2 class="section-heading">Fábrica</h2>
                     <h3 class="section-subheading text-muted">Puesta en circulación y retirada de baterías.</h3>
                     <select name="Fabric" id="Fabric">
-                        <option value="0">USUARIO 1 - (0xe092b1fa25df5786d151246e492eed3d15ea4daa)</option>
-                        <option value="1">USUARIO 2 - (0xc0d8f541ab8b71f20c10261818f2f401e8194049)</option>
-                        <option value="2">USUARIO 3 - (0xf1f8ef6b4d4ba31079e2263ec85c03fd5a0802bf)</option>
-                        <option value="3">USUARIO 4 - (0xc91579bb7972f76d595f8665bffaf92874c8084c)</option>
-                        <option value="4">USUARIO 5 - (0x6f03947036cba3279b07cd6ea5ca674ca51e52ba)</option>
-                        <option value="5">USUARIO 6 - (0x889735777f51c84272a7feb0d763280179a529a9)</option>
-                        <option value="6">USUARIO 7 - (0x2c46bcb6da3ae85da881edeed4ec2fe92670f90f)</option>
-                        <option value="7">USUARIO 8 - (0x6a71e87487c0ec01ecffd09a2042cb5ed507393e)</option>
-                        <option value="8">USUARIO 9 - (0x3e014e5c311a7d6f652ca4f8bb016f4338a44118)</option>
-                        <option value="9">USUARIO 10 - (0x75c4fb2e81a6d3420125f5145182f528d1699146)</option>
+                        <option value="0">USUARIO 1 - (0x994319e1b1de09aac4aa5b225a7d5cade79d04ed)</option>
+                        <option value="1">USUARIO 2 - (0x66c5a820d0e743fc7030f02aa873875c84a88f3f)</option>
+                        <option value="2">USUARIO 3 - (0x34322a678b16ce26fc0e2bdde1e3c1b666a34a66)</option>
+                        <option value="3">USUARIO 4 - (0xfc3b00c03b74ee1d94fa10e21aef4e6e9710e8a8)</option>
+                        <option value="4">USUARIO 5 - (0xf76c62480a8a6a83451eeef40d331ed179da7f89)</option>
+                        <option value="5">USUARIO 6 - (0x7b1b6d29cb425887d1bc4849d0708091bcbaf16b)</option>
+                        <option value="6">USUARIO 7 - (0x12e3bb9f253bd233e03bd696b1c558a056179b87)</option>
+                        <option value="7">USUARIO 8 - (0x59bedaa81edfd70b8e370a96cf29ee327e84e551)</option>
+                        <option value="8">USUARIO 9 - (0x9a63729158a93f502935bc322af78e4f25a5cc02)</option>
+                        <option value="9">USUARIO 10 - (0xab2c680816421e56ba3274a37c3df455fba32725)</option>
                     </select>
                 </div>
             </div>
